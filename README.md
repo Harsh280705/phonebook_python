@@ -71,5 +71,118 @@ View the HTML test report:
 npm run test:e2e:report
 ```
 
-The Playwright tests cover authentication, contacts, import/export, and pagination.
+## API Tests
+
+### 1. `GET /`
+
+* `test_root_endpoint` — Verifies that the API root endpoint is running and returns the expected response.
+
+---
+
+## Authentication APIs
+
+### 2. `POST /api/auth/register`
+
+* `test_register_valid_user` — Tests successful user registration.
+* `test_register_duplicate_username_or_email` — Tests duplicate username/email rejection.
+* `test_register_invalid_data` — Tests invalid registration data.
+
+### 3. `POST /api/auth/login`
+
+* `test_login_by_username_and_email` — Tests login using both username and email.
+* `test_invalid_login` — Tests rejection of invalid credentials.
+
+### 4. `GET /api/auth/me`
+
+* `test_current_user_requires_authentication` — Tests authenticated and unauthenticated access.
+
+### 5. `POST /api/auth/logout`
+
+* `test_logout_invalidates_session` — Tests that logout invalidates the user's session.
+
+---
+
+## Contact APIs
+
+### 6. `GET /api/contacts/`
+
+* `test_protected_contact_endpoints_require_authentication` — Tests that unauthenticated users cannot access contacts.
+* `test_create_get_single_and_list_contacts` — Tests listing contacts.
+* `test_search_and_pagination` — Tests search results and pagination.
+* `test_users_cannot_access_each_others_contacts` — Tests user-specific contact access.
+
+### 7. `POST /api/contacts/`
+
+* `test_protected_contact_endpoints_require_authentication` — Tests authentication protection.
+* `test_create_get_single_and_list_contacts` — Tests successful contact creation.
+* `test_create_invalid_contact_data` — Tests invalid contact data.
+* `test_duplicate_phone_and_email_are_rejected` — Tests duplicate phone/email rejection.
+
+### 8. `GET /api/contacts/{contact_id}`
+
+* `test_create_get_single_and_list_contacts` — Tests retrieving a contact.
+* `test_delete_contact_and_missing_contact` — Tests non-existent contact handling.
+* `test_users_cannot_access_each_others_contacts` — Tests that another user's contact cannot be accessed.
+* `test_protected_contact_endpoints_require_authentication` — Tests authentication protection.
+
+### 9. `PUT /api/contacts/{contact_id}`
+
+* `test_update_contact` — Tests successful contact updates.
+* `test_protected_contact_endpoints_require_authentication` — Tests authentication protection.
+* `test_users_cannot_access_each_others_contacts` — Tests that another user's contact cannot be updated.
+
+### 10. `DELETE /api/contacts/{contact_id}`
+
+* `test_delete_contact_and_missing_contact` — Tests contact deletion and non-existent contact handling.
+* `test_protected_contact_endpoints_require_authentication` — Tests authentication protection.
+* `test_users_cannot_access_each_others_contacts` — Tests that another user's contact cannot be deleted.
+
+---
+
+## Search and Pagination
+
+### 11. `GET /api/contacts/?search=...`
+
+* `test_search_and_pagination` — Tests contact search and correct filtered results.
+
+### 12. `GET /api/contacts/?page=2&limit=10`
+
+* `test_search_and_pagination` — Tests page number, page size, total count, and final-page results.
+
+---
+
+## CSV Import API
+
+### 13. `POST /api/contacts/import`
+
+* `test_export_requires_authentication` — Tests authentication protection.
+* `test_import_valid_csv_and_persists_contacts` — Tests valid CSV import and database persistence.
+* `test_import_external_columns_and_excel_phone_text` — Tests external column mapping and Excel-style phone values.
+* `test_import_invalid_rows_and_scientific_notation` — Tests invalid phone, email, name, and scientific notation handling.
+* `test_import_duplicates_are_skipped` — Tests duplicate contact handling.
+* `test_import_rejects_missing_headers` — Tests missing CSV headers.
+* `test_import_rejects_non_csv_and_empty_files` — Tests invalid and empty files.
+
+---
+
+## CSV Export API
+
+### 14. `GET /api/contacts/export`
+
+* `test_export_requires_authentication` — Tests authentication protection.
+* `test_export_returns_only_authenticated_users_contacts` — Tests:
+
+  * Successful CSV export
+  * CSV content type
+  * Correct CSV headers
+  * Correct contact data
+  * Exporting only the authenticated user's contacts
+
+---
+
+### Summary
+
+**Total backend API tests: 24**
+**All implemented backend API endpoints are covered by automated tests.**    
+
 
