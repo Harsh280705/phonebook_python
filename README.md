@@ -1,30 +1,49 @@
-# 📞 Phonebook Application
+````markdown
+# 📞 Phonebook Application (Python)
 
 A full-stack Phonebook Application built using **Vue.js, FastAPI, PostgreSQL, SQLAlchemy, Docker, and Nginx**.
 
+## Architecture
+
+```text
+Browser
+   ↓
+Nginx (Vue.js Frontend)
+   ↓  /api
+FastAPI (Python)
+   ↓
+SQLAlchemy
+   ↓
+PostgreSQL
+````
+
 ## Features
 
-- User registration and login
-- Add, view, update, and delete contacts
-- Search contacts
-- Google-style numbered pagination
-- Import contacts using CSV
-- Export contacts as CSV
-- PostgreSQL database storage
-- Up to 1000 contacts for testing
+* User registration and login
+* PostgreSQL-based authentication
+* Protected API endpoints
+* Add, view, update, and delete contacts
+* User-specific contact ownership
+* Search contacts
+* Google-style numbered pagination
+* Import contacts using CSV
+* CSV column mapping and validation
+* Export contacts as CSV
+* PostgreSQL database storage
+* Up to 1000 contacts for testing
 
 ## Run Locally
 
 ### Requirements
 
-- Docker Desktop
-- Git
+* Docker Desktop
+* Git
 
 Clone the repository:
 
 ```bash
-git clone https://github.com/Harsh280705/Phonebook_App.git
-cd Phonebook_App
+git clone https://github.com/Harsh280705/phonebook_python.git
+cd phonebook_python
 ```
 
 Build and start the application:
@@ -33,7 +52,7 @@ Build and start the application:
 docker compose up --build
 ```
 
-Open:
+Open the application:
 
 ```text
 http://localhost
@@ -45,7 +64,39 @@ http://localhost
 docker compose down
 ```
 
+To rebuild after backend or frontend changes:
+
+```bash
+docker compose up --build
+```
+
+## Populate Fake Contacts
+
+With the stack running:
+
+```bash
+docker compose exec backend python -m app.scripts.populate_contacts
+```
+
+This adds contacts until the database has approximately 1000 contacts. Existing contacts are preserved.
+
 ## Testing
+
+### Backend API Tests
+
+Run the backend API tests:
+
+```bash
+docker compose exec backend pytest
+```
+
+## Playwright End-to-End Tests
+
+From the `frontend` directory:
+
+```bash
+cd frontend
+```
 
 Run all Playwright tests:
 
@@ -71,13 +122,13 @@ View the HTML test report:
 npm run test:e2e:report
 ```
 
+The Playwright tests cover authentication, contacts, import/export, search, and pagination.
+
 ## API Tests
 
 ### 1. `GET /`
 
 * `test_root_endpoint` — Verifies that the API root endpoint is running and returns the expected response.
-
----
 
 ## Authentication APIs
 
@@ -99,8 +150,6 @@ npm run test:e2e:report
 ### 5. `POST /api/auth/logout`
 
 * `test_logout_invalidates_session` — Tests that logout invalidates the user's session.
-
----
 
 ## Contact APIs
 
@@ -137,8 +186,6 @@ npm run test:e2e:report
 * `test_protected_contact_endpoints_require_authentication` — Tests authentication protection.
 * `test_users_cannot_access_each_others_contacts` — Tests that another user's contact cannot be deleted.
 
----
-
 ## Search and Pagination
 
 ### 11. `GET /api/contacts/?search=...`
@@ -149,13 +196,11 @@ npm run test:e2e:report
 
 * `test_search_and_pagination` — Tests page number, page size, total count, and final-page results.
 
----
-
 ## CSV Import API
 
 ### 13. `POST /api/contacts/import`
 
-* `test_export_requires_authentication` — Tests authentication protection.
+* `test_import_requires_authentication` — Tests authentication protection.
 * `test_import_valid_csv_and_persists_contacts` — Tests valid CSV import and database persistence.
 * `test_import_external_columns_and_excel_phone_text` — Tests external column mapping and Excel-style phone values.
 * `test_import_invalid_rows_and_scientific_notation` — Tests invalid phone, email, name, and scientific notation handling.
@@ -163,26 +208,16 @@ npm run test:e2e:report
 * `test_import_rejects_missing_headers` — Tests missing CSV headers.
 * `test_import_rejects_non_csv_and_empty_files` — Tests invalid and empty files.
 
----
-
 ## CSV Export API
 
 ### 14. `GET /api/contacts/export`
 
 * `test_export_requires_authentication` — Tests authentication protection.
-* `test_export_returns_only_authenticated_users_contacts` — Tests:
+* `test_export_returns_only_authenticated_users_contacts` — Tests successful CSV export, CSV content type, correct headers and contact data, and ensures only the authenticated user's contacts are exported.
 
-  * Successful CSV export
-  * CSV content type
-  * Correct CSV headers
-  * Correct contact data
-  * Exporting only the authenticated user's contacts
-
----
-
-### Summary
+## Summary
 
 **Total backend API tests: 24**
-**All implemented backend API endpoints are covered by automated tests.**    
 
+**All implemented backend API endpoints are covered by automated tests.**
 
